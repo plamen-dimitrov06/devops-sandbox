@@ -25,7 +25,7 @@ EOS
 
     containers.vm.provider "virtualbox" do |v|
       v.gui = false
-      v.memory = 4096
+      v.memory = 2048
       v.cpus = 1
     end
     containers.vm.provision "shell", inline: $terraform, privileged: false
@@ -60,7 +60,7 @@ MODULEGIT
 
     web.vm.provider "virtualbox" do |v|
       v.gui = false
-      v.memory = 4096
+      v.memory = 2048
       v.cpus = 1
     end
     web.vm.provision "shell", path: "add-hosts.sh"
@@ -95,7 +95,7 @@ PUPPETMODS
 
     db.vm.provider "virtualbox" do |v|
       v.gui = false
-      v.memory = 4096
+      v.memory = 2048
       v.cpus = 1
     end
 

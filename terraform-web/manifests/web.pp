@@ -27,11 +27,13 @@ file { '/etc/apache2/sites-available/vhost-app4.conf':
 file { '/etc/apache2/sites-enabled/vhost-app1.conf':
     ensure => 'link',
     target => '/etc/apache2/sites-available/vhost-app1.conf',
+    notify => Service[apache2],
 }
 
 file { '/etc/apache2/sites-enabled/vhost-app4.conf':
     ensure => 'link',
     target => '/etc/apache2/sites-available/vhost-app4.conf',
+    notify => Service[apache2],
 }
 
 file { '/var/www/app1':

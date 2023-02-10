@@ -10,17 +10,17 @@ Vagrant.configure("2") do |config|
     containers.vm.network "private_network", ip: "192.168.121.121"
 
     $terraform = <<TERRAFORM
-echo '# Install Terraform'
-wget https://releases.hashicorp.com/terraform/1.3.7/terraform_1.3.7_linux_amd64.zip -O /tmp/terraform.zip
-unzip /tmp/terraform.zip
-sudo mv terraform /usr/local/bin
-rm /tmp/terraform.zip
+    echo '# Install Terraform ...'
+    wget https://releases.hashicorp.com/terraform/1.3.7/terraform_1.3.7_linux_amd64.zip -O /tmp/terraform.zip
+    unzip /tmp/terraform.zip
+    sudo mv terraform /usr/local/bin
+    rm /tmp/terraform.zip
 TERRAFORM
-  
+
     $python = <<EOS
-echo "* Install Python3 ..." 
-sudo apt-get update
-sudo apt-get install -y python3 python3-pip python3-distro
+    echo "* Install Python3 ..."
+    sudo apt-get update
+    sudo apt-get install -y python3 python3-pip python3-distro
 EOS
 
     containers.vm.provider "virtualbox" do |v|
@@ -41,19 +41,21 @@ EOS
     end
   end
 
+  $puppetdeb = <<PUPPETDEB
+  echo '# Install Puppet ...'
+  wget https://apt.puppet.com/puppet7-release-bullseye.deb
+  sudo dpkg -i puppet7-release-bullseye.deb
+  sudo apt-get update
+  sudo apt-get install -y puppet-agent
+PUPPETDEB
+
   config.vm.define "web" do |web|
     web.vm.box = "shekeriev/debian-11"
     web.vm.hostname = "web.exam"
     web.vm.network "private_network", ip: "192.168.121.122"
 
-    $puppetdeb = <<PUPPETDEB
-    wget https://apt.puppet.com/puppet7-release-bullseye.deb
-    sudo dpkg -i puppet7-release-bullseye.deb
-    sudo apt-get update
-    sudo apt-get install -y puppet-agent
-PUPPETDEB
-
     $modulegit = <<MODULEGIT
+    echo '# Enable necessary Puppet module(s) ...'
     puppet module install puppetlabs-vcsrepo
     sudo cp -vR ~/.puppetlabs/etc/code/modules/ /etc/puppetlabs/code/
 MODULEGIT
@@ -80,14 +82,8 @@ MODULEGIT
     db.vm.hostname = "db.exam"
     db.vm.network "private_network", ip: "192.168.121.123"
 
-    $puppetdeb = <<PUPPETDEB
-    wget https://apt.puppet.com/puppet7-release-bullseye.deb
-    sudo dpkg -i puppet7-release-bullseye.deb
-    sudo apt-get update
-    sudo apt-get install -y puppet-agent
-PUPPETDEB
-
     $puppetmods = <<PUPPETMODS
+    echo '# Enable necessary Puppet module(s) ...'
     puppet module install puppetlabs-vcsrepo
     puppet module install puppetlabs/mysql
     sudo cp -vR ~/.puppetlabs/etc/code/modules/ /etc/puppetlabs/code/
@@ -109,5 +105,5 @@ PUPPETMODS
       puppet.options = "--verbose --debug"
     end
   end
-  
+
 end
